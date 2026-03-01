@@ -236,7 +236,7 @@ These warnings are expected for an SPI slave whose setup/hold requirements are g
 ### Elaborated Design (RTL Block Diagram)
 > Vivado RTL analysis view showing the `SPI_Wrapper` top-level with `ram_inst` and `spi_slave_inst` sub-modules and all inter-module connections.
 
-![Elaborated Design](Schematics/Elaborated_Design.png)
+![Elaborated Design](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/Elaborated_Design.png)
 
 ---
 
