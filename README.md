@@ -54,7 +54,7 @@ The top-level `SPI_Wrapper` module connects two sub-modules in a direct pipeline
 
 The SPI slave is controlled by a 5-state **Gray-encoded** FSM. The state transitions are driven exclusively by `SS_N` and the incoming `MOSI` command bits — **not** by `bit_count` reaching `Max_Count`. This ensures `RX_VALID` always latches on SS_N's rising edge while the FSM is still in a data state, eliminating a one-cycle race condition.
 
-![FSM Diagram](https://drive.google.com/file/d/1-wH7_bqts6MpF1tCMFZOIp3j0OGKKrS5/view?usp=drive_link)
+![FSM Diagram](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/FSM_Diagram.png)
 
 | State       | Encoding | Description                                      |
 |-------------|----------|--------------------------------------------------|
@@ -74,7 +74,7 @@ The SPI slave is controlled by a 5-state **Gray-encoded** FSM. The state transit
 
 ### FSM State Diagram
 
-![FSM State Diagram](https://drive.google.com/file/d/1-wH7_bqts6MpF1tCMFZOIp3j0OGKKrS5/view?usp=drive_link)
+![FSM State Diagram](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/FSM_Diagram.png)
 
 ---
 
