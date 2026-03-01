@@ -34,7 +34,7 @@ A fully synthesised and implemented **SPI Mode-0 Slave** interfaced with a **256
 
 The top-level `SPI_Wrapper` module connects two sub-modules in a direct pipeline. The SPI_SLAVE deserialises incoming MOSI bits into 10-bit frames and passes them to the RAM via the `RX_data` / `RX_VALID` handshake. The RAM decodes the opcode, performs the requested operation, and drives `TX_DATA` / `TX_VALID` back to the SPI_SLAVE for serialisation onto MISO.
 
-![Block Diagram](Hardware/Block_Diagram.png)
+![Block Diagram](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/Block_Diagram.png)
 
 | Signal        | Width | Direction         | Description                              |
 |---------------|-------|-------------------|------------------------------------------|
@@ -70,7 +70,7 @@ The SPI slave is controlled by a 5-state **Gray-encoded** FSM. The state transit
 
 ### System Block Diagram
 
-![System Block Diagram](Hardware/Block_Diagram.png)
+![System Block Diagram](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/Block_Diagram.png)
 
 ### FSM State Diagram
 
