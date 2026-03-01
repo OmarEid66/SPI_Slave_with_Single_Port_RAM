@@ -243,7 +243,7 @@ These warnings are expected for an SPI slave whose setup/hold requirements are g
 ### Synthesized Design (Post-Synthesis Netlist)
 > Post-synthesis schematic showing technology primitives: `IBUF`, `BUFG`, `FDCE` flip-flops, `LUT6`, `MUXF7/F8`, and the tri-state `OBUFT` on MISO.
 
-![Synthesized Design](Schematics/Synthesized_Design.png)
+![Synthesized Design](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/Synthesized_Design.png)
 
 ---
 
