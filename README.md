@@ -31,43 +31,37 @@ A fully synthesised and implemented **SPI Mode-0 Slave** interfaced with a **256
 
 ## Architecture Overview
 
-The top-level `SPI_Wrapper` module connects two sub-modules in a direct pipeline:
+The top-level `SPI_Wrapper` module connects two sub-modules in a direct pipeline. The SPI_SLAVE deserialises incoming MOSI bits into 10-bit frames and passes them to the RAM via the `RX_data` / `RX_VALID` handshake. The RAM decodes the opcode, performs the requested operation, and drives `TX_DATA` / `TX_VALID` back to the SPI_SLAVE for serialisation onto MISO.
 
-```
-SPI Master
-    │
-    │  MOSI / SS_N / CLK
-    ▼
-┌─────────────────────┐
-│      SPI_SLAVE      │  ◄── Deserialises MOSI bits into 10-bit frames
-│                     │       Serialises TX_DATA back onto MISO
-│  RX_data[9:0]  ──►  │
-│  RX_VALID      ──►  │
-│  ◄── TX_DATA[7:0]   │
-│  ◄── TX_VALID       │
-└─────────────────────┘
-    │                 ▲
-    │ RX_data/VALID   │ TX_DATA/VALID
-    ▼                 │
-┌─────────────────────┐
-│        RAM          │  ◄── Decodes opcode, performs read/write
-│   256 × 8-bit       │       Asserts Tx_Valid on read data ready
-└─────────────────────┘
-```
+![Block Diagram](Hardware/Block_Diagram.png)
+
+| Signal        | Width | Direction         | Description                              |
+|---------------|-------|-------------------|------------------------------------------|
+| `MOSI`        | 1     | Master → Slave    | Serial data input                        |
+| `MISO`        | 1     | Slave → Master    | Serial data output (hi-Z when inactive)  |
+| `SS_N`        | 1     | Master → Slave    | Active-low chip select                   |
+| `CLK`         | 1     | Shared            | System clock (100 MHz)                   |
+| `RST_N`       | 1     | Shared            | Active-low asynchronous reset            |
+| `rx_data`     | 10    | SPI_SLAVE → RAM   | Deserialised frame `{cmd[1:0], data[7:0]}` |
+| `rx_valid`    | 1     | SPI_SLAVE → RAM   | Strobe: `rx_data` is valid for one cycle |
+| `tx_data`     | 8     | RAM → SPI_SLAVE   | Read data to serialise onto MISO         |
+| `tx_valid`    | 1     | RAM → SPI_SLAVE   | Strobe: `tx_data` is valid               |
+
+---
 
 ### SPI_SLAVE FSM
 
-The SPI slave is controlled by a 5-state **Gray-encoded** FSM to minimise glitch transitions between adjacent states:
+The SPI slave is controlled by a 5-state **Gray-encoded** FSM. The state transitions are driven exclusively by `SS_N` and the incoming `MOSI` command bits — **not** by `bit_count` reaching `Max_Count`. This ensures `RX_VALID` always latches on SS_N's rising edge while the FSM is still in a data state, eliminating a one-cycle race condition.
+
+![FSM Diagram](Hardware/FSM_Diagram.png)
 
 | State       | Encoding | Description                                      |
 |-------------|----------|--------------------------------------------------|
 | `IDLE`      | `3'b000` | Waiting for SS_N to assert (go LOW)              |
-| `CHK_CMD`   | `3'b001` | Sampling the two MSB command bits                |
+| `CHK_CMD`   | `3'b001` | Sampling the two MSB command bits from MOSI      |
 | `WRITE`     | `3'b011` | Receiving write-address or write-data payload    |
 | `READ_ADDR` | `3'b010` | Receiving read-address payload                   |
 | `READ_DATA` | `3'b110` | Driving MISO; receiving dummy payload bits       |
-
-**RX_VALID** is latched on the **rising edge of SS_N** (end-of-transaction) rather than on `bit_count == Max_Count`. This avoids a one-cycle race where the FSM would return to IDLE before SS_N rose, causing the latch to see IDLE and never fire.
 
 ---
 
@@ -244,6 +238,26 @@ These warnings are expected for an SPI slave whose setup/hold requirements are g
 > Post-implementation device view showing placed logic clusters in the lower region of the Artix-7 fabric, consistent with the low (~5%) utilization figures.
 
 ![Implemented Design](Schematics/Implemented_Design.png)
+
+---
+
+## Hardware Target
+
+The design was synthesised, implemented, and programmed onto the **Digilent Basys 3** development board.
+
+![Digilent Basys 3](Hardware/FPGA_Board.png)
+
+| Feature               | Specification                              |
+|-----------------------|--------------------------------------------|
+| Board                 | Digilent Basys 3                           |
+| FPGA                  | Xilinx Artix-7 `xc7a35tcpg236-2L`         |
+| On-chip Clock         | 100 MHz (`CLK100MHZ`)                      |
+| User I/O              | 16 switches, 16 LEDs, 5 buttons            |
+| Pmod Connectors       | 4 × Pmod headers (used for SPI signals)    |
+| Programming Interface | USB-JTAG (on-board Digilent USB)           |
+| Power Supply          | USB (500 mA) or external 5 V jack          |
+
+> The SPI signals (`MOSI`, `MISO`, `SS_N`) are routed through the Pmod headers. The system clock (`CLK`) is sourced from the on-board 100 MHz oscillator, and `RST_N` is mapped to a push button.
 
 ---
 
