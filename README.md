@@ -14,6 +14,7 @@ A fully synthesised and implemented **SPI Mode-0 Slave** interfaced with a **256
 ## Table of Contents
 
 - [Architecture Overview](#architecture-overview)
+- [Design Diagrams](#design-diagrams)
 - [SPI Frame Protocol](#spi-frame-protocol)
 - [File Structure](#file-structure)
 - [FPGA Implementation](#fpga-implementation)
@@ -62,6 +63,18 @@ The SPI slave is controlled by a 5-state **Gray-encoded** FSM. The state transit
 | `WRITE`     | `3'b011` | Receiving write-address or write-data payload    |
 | `READ_ADDR` | `3'b010` | Receiving read-address payload                   |
 | `READ_DATA` | `3'b110` | Driving MISO; receiving dummy payload bits       |
+
+---
+
+## Design Diagrams
+
+### System Block Diagram
+
+![System Block Diagram](Hardware/Block_Diagram.png)
+
+### FSM State Diagram
+
+![FSM State Diagram](Hardware/FSM_Diagram.png)
 
 ---
 
