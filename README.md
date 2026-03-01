@@ -258,7 +258,7 @@ These warnings are expected for an SPI slave whose setup/hold requirements are g
 
 The design was synthesised, implemented, and programmed onto the **Digilent Basys 3** development board.
 
-![Digilent Basys 3](Hardware/FPGA_Board.png)
+![Digilent Basys 3](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/FPGA_Board.jpg)
 
 | Feature               | Specification                              |
 |-----------------------|--------------------------------------------|
