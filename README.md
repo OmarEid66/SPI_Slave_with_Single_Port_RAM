@@ -250,7 +250,7 @@ These warnings are expected for an SPI slave whose setup/hold requirements are g
 ### Implemented Design (Device Floorplan)
 > Post-implementation device view showing placed logic clusters in the lower region of the Artix-7 fabric, consistent with the low (~5%) utilization figures.
 
-![Implemented Design](Schematics/Implemented_Design.png)
+![Implemented Design](https://github.com/OmarEid66/SPI_Slave_with_Single_Port_RAM/blob/main/Screenshots/Implemented_Design.png)
 
 ---
 
